@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Technology & Engineering </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the animated background and theme */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a103c; /* A deep purple */
+            color: #e0e0e0;
+        }
+        #background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: #1a103c;
+        }
+        .section-card {
+            background-color: rgba(45, 28, 99, 0.6); /* Semi-transparent darker purple */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #a78bfa; /* Lighter purple for active/hover */
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 100%;
+            height: 2px;
+            background-color: #a78bfa;
+        }
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        /* Initial states for animations */
+        .heading-text {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .heading-text.is-visible {
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .header-bg {
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        .header-bg.is-visible {
+            animation: slideUp 1.2s ease forwards;
+        }
+        @keyframes slideUp {
+            to {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+        }
+        .bubble-image {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .bubble-image.is-visible {
+            animation: bubbleUp 1s ease forwards;
+        }
+        .bubble-image:hover {
+            transform: scale(1.05);
+        }
+        @keyframes bubbleUp {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(20px);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1) translateY(-10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .event-title {
+            display: inline-block;
+            opacity: 0;
+        }
+        .event-title.is-visible {
+            animation: wave 1.2s ease forwards;
+        }
+        @keyframes wave {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(-5px) rotate(-2deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+        .letter {
+            opacity: 0;
+            display: inline-block;
+        }
+        .letter.is-visible {
+            animation: letterFade 0.5s ease forwards;
+        }
+        @keyframes letterFade {
+            to {
+                opacity: 1;
+            }
+        }
+        .flag-text {
+            display: inline-block;
+            opacity: 0;
+            transform: perspective(400px) rotateY(10deg);
+        }
+        .flag-text.is-visible {
+            animation: flagWave 1s ease forwards;
+        }
+        @keyframes flagWave {
+            0% {
+                opacity: 0;
+                transform: perspective(400px) rotateY(10deg) translateY(10px);
+            }
+            50% {
+                opacity: 0.5;
+                transform: perspective(400px) rotateY(-10deg) translateY(-5px);
+            }
+            100% {
+                opacity: 1;
+                transform: perspective(400px) rotateY(0) translateY(0);
+            }
+        }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-150%) scale(0.5);
+        }
+        .slide-in-left.is-visible {
+            animation: slideInFromLeft 1.2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+        @keyframes slideInFromLeft {
+            from {
+                transform: translateX(-150%) scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(150%) scale(0.5);
+        }
+        .slide-in-right.is-visible {
+            animation: slideInFromRight 1.2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(150%) scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+        /* Apply staggered delays for text elements */
+        .flag-text:nth-child(1) { animation-delay: 0.1s; }
+        .flag-text:nth-child(2) { animation-delay: 0.2s; }
+        .flag-text:nth-child(3) { animation-delay: 0.3s; }
+        .flag-text:nth-child(4) { animation-delay: 0.4s; }
+        .flag-text:nth-child(5) { animation-delay: 0.5s; }
+        .flag-text:nth-child(6) { animation-delay: 0.6s; }
+        .flag-text:nth-child(7) { animation-delay: 0.7s; }
+        .flag-text:nth-child(8) { animation-delay: 0.8s; }
+        .flag-text:nth-child(9) { animation-delay: 0.9s; }
+        .flag-text:nth-child(10) { animation-delay: 1.0s; }
+        .flag-text:nth-child(n+11) { animation-delay: calc(0.1s * (n - 10)); }
+        /* Success Section Specific Styles */
+        .success-heading-container {
+            background: linear-gradient(45deg, #2d1c63, #1a103c, #4c1d95);
+            background-size: 400%;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+            backdrop-filter: blur(5px);
+            text-align: center;
+            animation: gradientShift 8s ease infinite;
+            margin-bottom: 20px;
+        }
+        .success-heading span {
+            opacity: 0;
+            transform: translateX(-50px);
+            display: inline-block;
+            animation: slideIn 0.5s ease forwards;
+        }
+        .success-heading span:nth-child(1) { animation-delay: 0.1s; }
+        .success-heading span:nth-child(2) { animation-delay: 0.2s; }
+        .success-heading span:nth-child(3) { animation-delay: 0.3s; }
+        .success-heading span:nth-child(4) { animation-delay: 0.4s; }
+        .success-heading span:nth-child(5) { animation-delay: 0.5s; }
+        .success-heading span:nth-child(6) { animation-delay: 0.6s; }
+        .success-heading span:nth-child(7) { animation-delay: 0.7s; }
+        .success-heading span:nth-child(8) { animation-delay: 0.8s; }
+        .success-heading span:nth-child(9) { animation-delay: 0.9s; }
+        .success-heading span:nth-child(10) { animation-delay: 1.0s; }
+        .success-heading span:nth-child(11) { animation-delay: 1.1s; }
+        .success-heading span:nth-child(12) { animation-delay: 1.2s; }
+        .success-heading span:nth-child(13) { animation-delay: 1.3s; }
+        .success-heading span:nth-child(14) { animation-delay: 1.4s; }
+        .success-heading span:nth-child(15) { animation-delay: 1.5s; }
+        .success-heading span:nth-child(16) { animation-delay: 1.6s; }
+        .success-heading span:nth-child(17) { animation-delay: 1.7s; }
+        .success-heading span:nth-child(18) { animation-delay: 1.8s; }
+        .success-heading span:nth-child(19) { animation-delay: 1.9s; }
+        .success-heading span:nth-child(20) { animation-delay: 2.0s; }
+        .success-heading span:nth-child(21) { animation-delay: 2.1s; }
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .category-button {
+            width: 100px;
+            height: 60px;
+            background: linear-gradient(45deg, #2d1c63, #1a103c);
+            color: #e0e0e0;
+            font-size: 1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .category-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 1);
+        }
+        .category-button:active {
+            transform: scale(0.95);
+        }
+        .category-content {
+            display: none;
+            background: rgba(45, 28, 99, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+        }
+        .category-content.active {
+            display: block;
+        }
+        .person {
+            display: flex;
+            align-items: center;
+            margin-bottom: 80px;
+            gap: 20px;
+        }
+        .person img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
+            animation: imageSlideIn 0.8s ease-out forwards;
+        }
+        .person:nth-child(1) img { animation-delay: 0.2s; }
+        .person:nth-child(2) img { animation-delay: 0.6s; }
+        .person:nth-child(3) img { animation-delay: 1.0s; }
+        .person-text {
+            animation: textSlideUp 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+        }
+        .person:nth-child(1) .person-text { animation-delay: 0.4s; }
+        .person:nth-child(2) .person-text { animation-delay: 0.8s; }
+        .person:nth-child(3) .person-text { animation-delay: 1.2s; }
+        .person-text h3 {
+            margin: 0;
+            font-size: 1.5em;
+            animation: nameSlideIn 0.8s ease-out forwards;
+        }
+        .person:nth-child(1) .person-text h3 { animation-delay: 0.4s; }
+        .person:nth-child(2) .person-text h3 { animation-delay: 0.8s; }
+        .person:nth-child(3) .person-text h3 { animation-delay: 1.2s; }
+        .person-text p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+        .achievements-section {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+        }
+        .achievement {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            animation: fadeCycle 40s ease-in-out infinite;
+        }
+        .achievement:nth-child(1) { animation-delay: 0s; }
+        .achievement:nth-child(2) { animation-delay: 8s; }
+        .achievement:nth-child(3) { animation-delay: 16s; }
+        .achievement:nth-child(4) { animation-delay: 24s; }
+        .achievement:nth-child(5) { animation-delay: 32s; }
+        .achievement img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.7);
+        }
+        .achievement-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #e0e0e0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            font-size: 0.9em;
+            text-align: center;
+            opacity: 0;
+            animation: fadeCycle 40s ease-in-out infinite;
+        }
+        .achievement:nth-child(1) .achievement-text { animation-delay: 0s; }
+        .achievement:nth-child(2) .achievement-text { animation-delay: 8s; }
+        .achievement:nth-child(3) .achievement-text { animation-delay: 16s; }
+        .achievement:nth-child(4) .achievement-text { animation-delay: 24s; }
+        .achievement:nth-child(5) .achievement-text { animation-delay: 32s; }
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes imageSlideIn {
+            0% {
+                transform: translateX(-50px);
+                filter: blur(10px);
+                opacity: 0;
+                box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
+            }
+            100% {
+                transform: translateX(0);
+                filter: blur(0);
+                opacity: 1;
+                box-shadow: 0 0 15px rgba(124, 58, 237, 1);
+            }
+        }
+        @keyframes textSlideUp {
+            0% {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes nameSlideIn {
+            0% {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeCycle {
+            0% { opacity: 0; }
+            2% { opacity: 1; }
+            18% { opacity: 1; }
+            20% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+/* Quiz Section Specific Styles */
+.quiz-option {
+    transition: background-color 0.3s, transform 0.3s;
+}
+.quiz-option:hover {
+    background-color: rgba(124, 58, 237, 0.2);
+    transform: scale(1.02);
+}
+.quiz-option input:checked + label {
+    background-color: rgba(124, 58, 237, 0.4);
+    color: #a78bfa;
+}
+.result-animation {
+    opacity: 0;
+    transform: scale(0.5);
+    animation: popIn 0.8s ease forwards;
+}
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+    </style>
+</head>
+<body class="bg-purple-900 text-gray-200">
+
+    <!-- Animated Background -->
+    <canvas id="background-animation"></canvas>
+
+    <!-- Header & Navigation -->
+    <header class="bg-opacity-80 backdrop-blur-sm bg-[#1a103c]/80 fixed top-0 left-0 right-0 z-50 border-b border-purple-800/50">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-white flag-text">EdTE Hub</h1>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#home" class="nav-link flag-text">Home</a>
+                <a href="#about" class="nav-link flag-text">About</a>
+                <a href="#history" class="nav-link flag-text">History</a>
+                <a href="#universities" class="nav-link flag-text">Universities</a>
+                  <a href="#events" class="nav-link flag-text">Events</a>
+                <a href="#tools" class="nav-link flag-text">Tools</a>
+                <a href="#careers" class="nav-link flag-text">Careers</a>
+                <a href="#future" class="nav-link flag-text">Future</a>
+                <a href="#success" class="nav-link flag-text">Success</a>
+                <a href="#quiz" class="nav-link flag-text">Quiz</a>
+                <a href="#qa" class="nav-link flag-text">Q&A</a>
+                <a href="#contact" class="nav-link flag-text">Contact</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-300 hover:bg-purple-800">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" obt/4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#home" class="block py-2 text-sm nav-link flag-text">Home</a>
+             <a href="#about" class="block py-2 text-sm nav-link flag-text">About</a>
+             <a href="#history" class="block py-2 text-sm nav-link flag-text">History</a>
+             <a href="#universities" class="block py-2 text-sm nav-link flag-text">Universities</a>
+             <a href="#events" class="block py-2 text-sm nav-link flag-text">Events</a>
+             <a href="#tools" class="block py-2 text-sm nav-link flag-text">Tools</a>
+             <a href="#careers" class="block py-2 text-sm nav-link flag-text">Careers</a>
+             <a href="#future" class="block py-2 text-sm nav-link flag-text">Future</a>
+             <a href="#success" class="block py-2 text-sm nav-link flag-text">Success</a>
+               <a href="#quiz" class="nav-link flag-text">Quiz</a>
+             <a href="#qa" class="block py-2 text-sm nav-link flag-text">Q&A</a>
+             <a href="#contact" class="block py-2 text-sm nav-link flag-text">Contact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 pt-24">
+
+        <!-- 1. Home Section -->
+        <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center">
+            <h2 class="text-5xl md:text-7xl font-extrabold text-white leading-tight">
+                <span class="letter-container">
+                    <span class="letter flag-text" style="animation-delay: 0.1s">E</span>
+                    <span class="letter flag-text" style="animation-delay: 0.2s">d</span>
+                    <span class="letter flag-text" style="animation-delay: 0.3s">u</span>
+                    <span class="letter flag-text" style="animation-delay: 0.4s">c</span>
+                    <span class="letter flag-text" style="animation-delay: 0.5s">a</span>
+                    <span class="letter flag-text" style="animation-delay: 0.6s">t</span>
+                    <span class="letter flag-text" style="animation-delay: 0.7s">i</span>
+                    <span class="letter flag-text" style="animation-delay: 0.8s">o</span>
+                    <span class="letter flag-text" style="animation-delay: 0.9s">n</span>
+                    <span class="letter flag-text" style="animation-delay: 1.0s">a</span>
+                    <span class="letter flag-text" style="animation-delay: 1.1s">l</span>
+                </span>
+                <span class="letter-container">
+                    <span class="letter flag-text" style="animation-delay: 1.2s">T</span>
+                    <span class="letter flag-text" style="animation-delay: 1.3s">e</span>
+                    <span class="letter flag-text" style="animation-delay: 1.4s">c</span>
+                    <span class="letter flag-text" style="animation-delay: 1.5s">h</span>
+                    <span class="letter flag-text" style="animation-delay: 1.6s">n</span>
+                    <span class="letter flag-text" style="animation-delay: 1.7s">o</span>
+                    <span class="letter flag-text" style="animation-delay: 1.8s">l</span>
+                    <span class="letter flag-text" style="animation-delay: 1.9s">o</span>
+                    <span class="letter flag-text" style="animation-delay: 2.0s">g</span>
+                    <span class="letter flag-text" style="animation-delay: 2.1s">y</span>
+                </span>
+                <span class="letter-container flag-text">&</span>
+                <span class="letter-container text-violet-400">
+                    <span class="letter flag-text" style="animation-delay: 2.2s">E</span>
+                    <span class="letter flag-text" style="animation-delay: 2.3s">n</span>
+                    <span class="letter flag-text" style="animation-delay: 2.4s">g</span>
+                    <span class="letter flag-text" style="animation-delay: 2.5s">i</span>
+                    <span class="letter flag-text" style="animation-delay: 2.6s">n</span>
+                    <span class="letter flag-text" style="animation-delay: 2.7s">e</span>
+                    <span class="letter flag-text" style="animation-delay: 2.8s">e</span>
+                    <span class="letter flag-text" style="animation-delay: 2.9s">r</span>
+                    <span class="letter flag-text" style="animation-delay: 3.0s">i</span>
+                    <span class="letter flag-text" style="animation-delay: 3.1s">n</span>
+                    <span class="letter flag-text" style="animation-delay: 3.2s">g</span>
+                </span>
+            </h2>
+            <p class="mt-6 text-lg md:text-xl max-w-3xl text-gray-300 flag-text">
+                Exploring the synergy between education and technology to create immersive, effective, and accessible learning experiences for the future.
+            </p>
+            <a href="#about" class="mt-10 px-8 py-3 bg-violet-600 hover:bg-violet-500 rounded-full text-white font-bold transition-transform duration-300 transform hover:scale-105 flag-text">
+                Discover More
+            </a>
+        </section>
+
+        <!-- 2. About Section -->
+        <section id="about" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">About EdTE</h2>
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Definition</h3>
+                            <p class="flag-text">Educational Technology and Engineering (EdTE) is an interdisciplinary field that focuses on designing, developing, implementing, and evaluating technological tools and systems to enhance teaching and learning processes.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Curriculum</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                               <p class="flag-text"><strong>Offered Courses:</strong> Instructional Design, Learning Analytics, AI in Education, AR/VR for Learning, Human-Computer Interaction, Software Development for Education.</p>
+                               <p class="flag-text"><strong>Lab Activities:</strong> Developing educational apps, creating virtual reality simulations, analyzing learning data sets, building interactive learning modules.</p>
+                            </div>
+                        </div>
+                         <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Differences from Traditional Subjects</h3>
+                            <p class="flag-text">Unlike traditional subjects that focus on a single domain, EdTE is inherently interdisciplinary, blending pedagogy, psychology, computer science, and design thinking. It emphasizes practical application and creation over theoretical knowledge alone.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Importance in the Modern Era</h3>
+                            <p class="flag-text">EdTE is crucial for personalizing education, bridging geographical gaps, and preparing students for a tech-driven workforce. It provides practical skills in both educational theory and software engineering.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. History Section -->
+        <section id="history" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7275401?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">History of EdTE</h2>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Global Progress</h3>
+                            <p class="flag-text">The history of EdTE traces back to the early 20th century with teaching machines, evolving through the computer-aided instruction of the 80s, the rise of the internet and LMS in the 90s, to the current era of AI, mobile learning, and immersive technologies.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Progress in Bangladesh</h3>
+                            <p class="flag-text">In Bangladesh, EdTE has gained significant momentum with governmental initiatives like 'Digital Bangladesh'. The adoption of online learning platforms, digital content development, and blended learning models in universities marks a significant step forward.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. List of Universities Section -->
+        <section id="universities" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Universities Offering EdTE</h2>
+                     <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">International</h3>
+                            <ul class="list-disc list-inside">
+                                <li class="flag-text">Stanford University (Learning, Design and Technology)</li>
+                                <li class="flag-text">Harvard University (Technology, Innovation, and Education)</li>
+                                <li class="flag-text">Carnegie Mellon University (METALS Program)</li>
+                                <li class="flag-text">University College London (Education and Technology MA)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2 flag-text">Bangladesh</h3>
+                            <ul class="list-disc list-inside">
+                                 <li class="flag-text">University of Dhaka (ILET)</li>
+                                 <li class="flag-text">Bangladesh University of Professionals (BUP)</li>
+                                 <li class="flag-text">Leading private universities are increasingly offering related courses.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Events Section -->
+        <section id="events" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative overflow-hidden">
+                    <!-- Event Header -->
+                    <div class="relative mb-16 md:mb-20">
+                        <!-- Faded Heading Image -->
+                        <img src="https://ik.imagekit.io/storycycle/story/EDTE/Purple%20and%20Pink%20Neon%20Colorful%20Music%20Vestival%20Facebook%20Event%20Cover.jpg?updatedAt=1749370377384" alt="Events Header" class="w-full h-56 md:h-64 object-cover rounded-lg opacity-40 bubble-image">
+                        <!-- Centered Text Over Image -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <h2 class="text-4xl md:text-5xl font-extrabold text-white text-center flag-text" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.7);">Event of EDTE</h2>
+                        </div>
+                        <!-- Left Round Image -->
+                        <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-08%20142128.png?updatedAt=1749370906872" alt="Event detail 1" class="slide-in-left absolute -bottom-12 left-5 md:left-10 w-24 h-24 md:w-32 md:h-32 object-cover rounded-full border-4 border-violet-500 shadow-lg">
+                        <!-- Right Round Image -->
+                        <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-08%20142128.png?updatedAt=1749370906872" alt="Event detail 2" class="slide-in-right absolute -bottom-12 right-5 md:right-10 w-24 h-24 md:w-32 md:h-32 object-cover rounded-full border-4 border-violet-500 shadow-lg">
+                    </div>
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">........................University Of Frontier Technologies, Bangladesh.................</h2>
+                    <div class="button-container">
+                        <button class="category-button flag-text" onclick="showEventCategory('upcoming')">Upcoming Events</button>
+                        <button class="category-button flag-text" onclick="showEventCategory('previous')">Previous Events</button>
+                    </div>
+                    <div class="content-container mt-8">
+                        <div id="upcoming-content" class="category-content">
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div class="text-center">
+                                    <img src="https://ik.imagekit.io/storycycle/story/Screenshot%202025-06-08%20201755.png?updatedAt=1749392305365" alt="EdTech Summit 2025" class="bubble-image w-full h-48 object-cover rounded-lg mb-4">
+                                    <h3 class="text-xl font-semibold mb-2 event-title flag-text">Upcoming events will be published soon</h3>
+                                    <p class="text-sm flag-text">...............</p>
+                                    <p class="text-sm flag-text"><strong>Date:</strong> .........</p>
+                                    <p class="text-sm flag-text"><strong>Location:</strong> ............</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div id="previous-content" class="category-content">
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div class="text-center">
+                                    <img src="https://ik.imagekit.io/storycycle/story/Screenshot%202025-06-08%20193525.png?updatedAt=1749389749875" alt="Tech Symposium 2024" class="bubble-image w-full h-48 object-cover rounded-lg mb-4">
+                                    <h3 class="text-xl font-semibold mb-2 event-title flag-text">২য় অনুচ্ছেদ</h3>
+                                    <p class="text-sm flag-text">Farewell program of 2nd batch of EDTE</p>
+                                    <p class="text-sm flag-text"><strong>Date:</strong> December 15, 2024</p>
+                                    <p class="text-sm flag-text"><strong>Location:</strong>University Of Frontier Technologies Campus</p>
+                                </div>
+                                <div class="text-center">
+                                    <img src="https://ik.imagekit.io/storycycle/story/Screenshot%202025-06-08%20195832.png?updatedAt=1749391130525" alt="AI in Education Workshop" class="bubble-image w-full h-48 object-cover rounded-lg mb-4">
+                                    <h3 class="text-xl font-semibold mb-2 event-title flag-text" style="animation-delay: 0.2s">Canvas of memories</h3>
+                                    <p class="text-sm flag-text">Farewell program of 2nd batch of EDTE ( night show )</p>
+                                    <p class="text-sm flag-text"><strong>Date:</strong>  December 15, 2024</p>
+                                    <p class="text-sm flag-text"><strong>Location:</strong>University Of Frontier Technologies Campus</p>
+                                </div>
+                                <div class="text-center">
+                                    <img src="https://ik.imagekit.io/storycycle/story/FB_IMG_1749391632734.jpg?updatedAt=1749391684639" alt="VR Learning Expo" class="bubble-image w-full h-48 object-cover rounded-lg mb-4">
+                                    <h3 class="text-xl font-semibold mb-2 event-title flag-text" style="animation-delay: 0.4s">SHAPA day of EDTE 5th</h3>
+                                    <p class="text-sm flag-text">celebrated 'Shapa Day' in traditional Panjabi – 5th Batch, EdTE style!</p>
+                                    <p class="text-sm flag-text"><strong>Date:</strong> November 11, 2024</p>
+                                    <p class="text-sm flag-text"><strong>Location:</strong>University Of Frontier Technologies Campus</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Tools & Technologies Section -->
+        <section id="tools" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Tools & Technologies</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center">
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">📚</div><h4 class="font-bold flag-text">Moodle</h4><p class="text-xs flag-text">LMS</p>
+                        </div>
+                         <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🧑‍🏫</div><h4 class="font-bold flag-text">Google Classroom</h4><p class="text-xs flag-text">LMS</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🕶️</div><h4 class="font-bold flag-text">Google Expeditions</h4><p class="text-xs flag-text">AR/VR</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🌍</div><h4 class="font-bold flag-text">Unimersiv</h4><p class="text-xs flag-text">AR/VR</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🤖</div><h4 class="font-bold flag-text">ChatGPT</h4><p class="text-xs flag-text">AI EdTech</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🎓</div><h4 class="font-bold flag-text">Khanmigo</h4><p class="text-xs flag-text">AI EdTech</p>
+                        </div>
+                         <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">✍️</div><h4 class="font-bold flag-text">Grammarly</h4><p class="text-xs flag-text">AI EdTech</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🗣️</div><h4 class="font-bold flag-text">Duolingo</h4><p class="text-xs flag-text">Learning App</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🧠</div><h4 class="font-bold flag-text">Quizlet</h4><p class="text-xs flag-text">Learning App</p>
+                        </div>
+                         <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🧩</div><h4 class="font-bold flag-text">Kahoot</h4><p class="text-xs flag-text">Learning App</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🎥</div><h4 class="font-bold flag-text">Khan Academy</h4><p class="text-xs flag-text">Video Learning</p>
+                        </div>
+                        <div class="p-4 bg-purple-900/50 rounded-lg">
+                            <div class="tool-icon flag-text">🎬</div><h4 class="font-bold flag-text">YouTube Edu</h4><p class="text-xs flag-text">Video Learning</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Career Opportunities Section ......................................................................-->
+        <section id="careers" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Career Opportunities</h2>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 flag-text">Education Sector</h4>
+                            <ul class="list-disc list-inside text-sm">
+                                <li class="flag-text">. Instructional Designer</li>
+                                <li class="flag-text">. Curriculum Developer</li>
+                                <li class="flag-text">. E-Learning Specialist</li>
+                                <li class="flag-text">. Technology Integration Coach</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2 flag-text">Tech Sector</h4>
+                            <ul class="list-disc list-inside text-sm">
+                                <li class="flag-text">. EdTech Product Manager</li>
+                                <li class="flag-text">. UX/UI Designer for Learning Apps</li>
+                                <li class="flag-text">. Software Engineer (Education)</li>
+                                <li class="flag-text">. Learning Data Analyst</li>
+                            </ul>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-lg mb-2 flag-text">Interactive Platforms</h4>
+                            <ul class="list-disc list-inside text-sm">
+                                 <li class="flag-text">. AR/VR Learning Experience Creator</li>
+                                 <li class="flag-text">. Gamification Expert</li>
+                                 <li class="flag-text">. Community Manager for Learning Platforms</li>
+                                 <li class="flag-text">. Content Strategist</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Future Demands Section ..................................................................-->
+        <section id="future" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Future Demands</h2>
+                    <p class="flag-text">The demand for EdTE professionals is projected to grow rapidly. Key future areas include personalized learning paths powered by AI, adaptive assessment systems, corporate training and reskilling platforms, and the ethical implementation of technology in education. Skills in data science, AI, and immersive technologies will be particularly valuable.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 9. Success Stories Section.......................................................................... -->
+        <section id="success" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <div class="success-heading-container">
+                        <h2 class="success-heading text-3xl font-bold text-violet-300 text-center heading-text">
+                            <span class="flag-text">S</span><span class="flag-text">u</span><span class="flag-text">c</span><span class="flag-text">c</span><span class="flag-text">e</span><span class="flag-text">s</span><span class="flag-text">s</span><span class="flag-text"> </span>
+                            <span class="flag-text">S</span><span class="flag-text">t</span><span class="flag-text">o</span><span class="flag-text">r</span><span class="flag-text">y</span><span class="flag-text"> </span>
+                            <span class="flag-text">o</span><span class="flag-text">f</span><span class="flag-text"> </span>
+                            <span class="flag-text">E</span><span class="flag-text">D</span><span class="flag-text">T</span><span class="flag-text">E</span>
+                        </h2>
+                        <div class="button-container">
+                            <button class="category-button flag-text" onclick="showCategory('Global')">Global</button>
+                            <button class="category-button flag-text" onclick="showCategory('Bangladesh')">Bangladesh</button>
+                            <button class="category-button flag-text" onclick="showCategory('Our Alumni')">Our Alumni</button>
+                        </div>
+                    </div>
+                    <div class="content-container">
+                        <div id="global-content" class="category-content active">
+                            <div class="person">
+                                <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-06%20212004.png?updatedAt=1749223218409" alt="Salman Khan" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Salman Amin Khan</h3>
+                                    <p class="flag-text"><strong>University: Massachusetts Institute of Technology (SB, MEng), Harvard University (MBA)</strong></p>
+                                    <p class="flag-text"><strong>Success Story:</strong> Salman Khan founded "Khan Academy" with the vision of providing free, world-class education to anyone, anywhere. Starting with simple YouTube videos, his platform now serves millions of learners globally.</p>
+                                    <p class="flag-text" style="margin-top: 20px;"><strong>Contribution:</strong> He revolutionized online education by creating a vast library of interactive video lessons and practice exercises, making quality education accessible and personalized through technology.</p>
+                                </div>
+                            </div>
+                            <div class="person">
+                                <img src="https://ik.imagekit.io/storycycle/story/EDTE/1516452235127.jpg?updatedAt=1749222515730" alt="Beverly Park Woolf" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Beverly Park Woolf</h3>
+                                    <p class="flag-text"><strong>University: University of Massachusetts Amherst</strong></p>
+                                    <p class="flag-text"><strong>Success Story:</strong> Beverly Park Woolf has advanced the use of artificial intelligence in education through her pioneering research. Her Intelligent Tutoring Systems (ITS) have helped thousands of students worldwide receive personalized learning experiences.</p>
+                                    <p class="flag-text" style="margin-top: 20px;"><strong>Contribution:</strong> She has designed innovative teaching methods by applying AI and machine learning to analyze student learning behaviors and emotions, opening new horizons in educational technology.</p>
+                                </div>
+                            </div>
+                            <div class="person">
+                                <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-06%20203536.png?updatedAt=1749220593341" alt="Punya Mishra" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Punya Mishra</h3>
+                                    <p class="flag-text"><strong>University: Arizona State University, USA</strong></p>
+                                    <p class="flag-text"><strong>Success Story:</strong> Punya Mishra is a global leader in educational technology, known for his work on creativity and innovation in learning. He has published 200+ articles, earned $11M+ in research grants, and ranks among the top 2% of scientists worldwide.</p>
+                                    <p class="flag-text" style="margin-top: 20px;"><strong>Contribution:</strong> Punya Mishra developed the widely-used TPACK framework for integrating technology in education. He co-hosts the Silver Lining for Learning webinar series and led the award-winning Master of Arts in Educational Technology program at Michigan State University.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="bangladesh-content" class="category-content">
+                            <div class="person">
+                                <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-06%20220817.png?updatedAt=1749226137585" alt="Ayman Sadiq" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Ayman Sadiq</h3>
+                                    <p class="flag-text"><strong>University: Institute of Business Administration, University of Dhaka</strong></p>
+                                    <p class="flag-text"><strong>Success Story:</strong> Founded 10 Minute School in 2015, which is now the largest online education platform in Bangladesh with over 9 million students.</p>
+                                    <p class="flag-text"><strong>Contribution:</strong> Revolutionized access to education by offering free video lessons, live classes, quizzes, and model tests for students from primary to university levels.</p>
+                                </div>
+                            </div>
+                            <div class="person">
+                                <img src="https://ik.imagekit.io/storycycle/story/EDTE/64f6df135bcebb3c0dc73423_Chowdhury_Shahir_Picture.jpg?updatedAt=1749229876853" alt="Shahir Chowdhury" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Shahir Chowdhury</h3>
+                                    <p class="flag-text"><strong>University: Institute of Business Administration, University of Dhaka</strong></p>
+                                    <p class="flag-text"><strong>Success Story:</strong> Founder and CEO, Shikho, a rapidly growing edtech startup in Bangladesh. He was listed in Bloomberg New Economy Catalysts 2023 for his contributions.</p>
+                                    <p class="flag-text"><strong>Contribution:</strong> Introduced gamified, Bengali-language online learning content that focuses on deep student engagement, test preparation, and career-focused skill development.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="alumni-content" class="category-content">
+                            <div class="person">
+                                <img src="https://via.placeholder.com/100" alt="Rahim Hossain" class="bubble-image">
+                                <div class="person-text">
+                                    <h3 class="flag-text">Rahim Hossain</h3>
+                                    <p class="flag-text"><strong>Success Story:</strong> Rahim, an EDTE alum, founded a startup that provides e-learning solutions across Asia.</p>
+                                    <p class="flag-text"><strong>Contribution:</strong> Guest lectures at EDTE and funds alumni networking events.</p>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="achievements-section">
+                        <div class="achievement">
+                            <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-07%20000131.png?updatedAt=1749232908900" alt="Achievement 1" class="bubble-image">
+                            <div class="achievement-text flag-text">
+                                <h1>OCPS wins award</h1>
+                                <p>OCPS wins award for achievements in educational technology</p>
+                            </div>
+                        </div>
+                        <div class="achievement">
+                            <img src="https://ik.imagekit.io/storycycle/story/EDTE/MOQ04675.jpg.webp?updatedAt=1749231206963" alt="Achievement 2" class="bubble-image">
+                            <div class="achievement-text flag-text">
+                                <h1>Innovation in Education</h1>
+                                <p>UNESCO Celebrates Egypt’s Achievements in Digital Technology and Innovation in Education</p>
+                            </div>
+                        </div>
+                        <div class="achievement">
+                            <img src="https://ik.imagekit.io/storycycle/story/EDTE/image.jpg?updatedAt=1749234261021" alt="Achievement 3" class="bubble-image">
+                            <div class="achievement-text flag-text">
+                                <h1>Technology-enabled Open Schools for All</h1>
+                                <p>Huawei showcases the achievements of the "Technology-enabled Open Schools for All" project in cooperation with UNESCO</p>
+                            </div>
+                        </div>
+                        <div class="achievement">
+                            <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-07%20002622.png?updatedAt=1749234425851" alt="Achievement 4" class="bubble-image">
+                            <div class="achievement-text flag-text">
+                                <h1>Honoured for Achievements</h1>
+                                <h2>Malaysian edtech Company Reskills Honoured for Achievements With Award at Prestigious Ceremony in Dubai</h2>
+                            </div>
+                        </div>
+                        <div class="achievement">
+                            <img src="https://ik.imagekit.io/storycycle/story/EDTE/Screenshot%202025-06-06%20233651.png?updatedAt=1749231433568" alt="Achievement 5" class="bubble-image">
+                            <div class="achievement-text flag-text">
+                                <h1>UK ed-tech show</h1>
+                                <p>HK educational achievements showcased at UK ed-tech show</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Quiz Section ....................................................................................-->
+<section id="quiz" class="py-20">
+    <div class="relative">
+        <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+        <div class="section-card p-8 rounded-lg relative">
+            <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Test Your EdTE Knowledge</h2>
+            <p class="text-center mb-8 flag-text">Take this 10-question quiz to assess your understanding of Educational Technology and Engineering. Select one answer per question and submit to see your score!</p>
+            <form id="quiz-form" class="space-y-6 max-w-2xl mx-auto">
+                <!-- Question 1 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">1. What does EdTE stand for?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q1" id="q1a" value="a" class="mr-2">
+                            <label for="q1a" class="p-2 rounded-md w-full flag-text">Educational Technology and Engineering</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q1" id="q1b" value="b" class="mr-2">
+                            <label for="q1b" class="p-2 rounded-md w-full flag-text">Electronic Design and Technical Engineering</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q1" id="q1c" value="c" class="mr-2">
+                            <label for="q1c" class="p-2 rounded-md w-full flag-text">Educational Theory and Evaluation</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 2 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">2. Which technology is commonly used in EdTE for immersive learning?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q2" id="q2a" value="a" class="mr-2">
+                            <label for="q2a" class="p-2 rounded-md w-full flag-text">Virtual Reality (VR)</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q2" id="q2b" value="b" class="mr-2">
+                            <label for="q2b" class="p-2 rounded-md w-full flag-text">Blockchain</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q2" id="q2c" value="c" class="mr-2">
+                            <label for="q2c" class="p-2 rounded-md w-full flag-text">Cryptocurrency</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 3 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">3. What is a key focus of EdTE curriculum?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q3" id="q3a" value="a" class="mr-2">
+                            <label for="q3a" class="p-2 rounded-md w-full flag-text">Instructional Design</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q3" id="q3b" value="b" class="mr-2">
+                            <label for="q3b" class="p-2 rounded-md w-full flag-text">Mechanical Engineering</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q3" id="q3c" value="c" class="mr-2">
+                            <label for="q3c" class="p-2 rounded-md w-full flag-text">Chemical Analysis</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 4 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">4. Which platform is an example of a Learning Management System (LMS)?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q4" id="q4a" value="a" class="mr-2">
+                            <label for="q4a" class="p-2 rounded-md w-full flag-text">Moodle</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q4" id="q4b" value="b" class="mr-2">
+                            <label for="q4b" class="p-2 rounded-md w-full flag-text">Photoshop</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q4" id="q4c" value="c" class="mr-2">
+                            <label for="q4c" class="p-2 rounded-md w-full flag-text">AutoCAD</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 5 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">5. In which decade did the internet significantly impact EdTE?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q5" id="q5a" value="a" class="mr-2">
+                            <label for="q5a" class="p-2 rounded-md w-full flag-text">1990s</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q5" id="q5b" value="b" class="mr-2">
+                            <label for="q5b" class="p-2 rounded-md w-full flag-text">1970s</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q5" id="q5c" value="c" class="mr-2">
+                            <label for="q5c" class="p-2 rounded-md w-full flag-text">2010s</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 6 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">6. Which university in Bangladesh offers EdTE-related courses?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q6" id="q6a" value="a" class="mr-2">
+                            <label for="q6a" class="p-2 rounded-md w-full flag-text">University Of Frontier Technologies, Bangladesh</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q6" id="q6b" value="b" class="mr-2">
+                            <label for="q6b" class="p-2 rounded-md w-full flag-text">Chittagong University</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q6" id="q6c" value="c" class="mr-2">
+                            <label for="q6c" class="p-2 rounded-md w-full flag-text">Rajshahi University</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 7 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">7. What is a common career path in EdTE?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q7" id="q7a" value="a" class="mr-2">
+                            <label for="q7a" class="p-2 rounded-md w-full flag-text">Instructional Designer</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q7" id="q7b" value="b" class="mr-2">
+                            <label for="q7b" class="p-2 rounded-md w-full flag-text">Civil Engineer</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q7" id="q7c" value="c" class="mr-2">
+                            <label for="q7c" class="p-2 rounded-md w-full flag-text">Accountant</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 8 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">8. Which tool is used for AI-driven education in EdTE?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q8" id="q8a" value="a" class="mr-2">
+                            <label for="q8a" class="p-2 rounded-md w-full flag-text">Khanmigo</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q8" id="q8b" value="b" class="mr-2">
+                            <label for="q8b" class="p-2 rounded-md w-full flag-text">Microsoft Excel</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q8" id="q8c" value="c" class="mr-2">
+                            <label for="q8c" class="p-2 rounded-md w-full flag-text">Adobe Illustrator</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 9 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">9. What initiative boosted EdTE in Bangladesh?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q9" id="q9a" value="a" class="mr-2">
+                            <label for="q9a" class="p-2 rounded-md w-full flag-text">Smart Bangladesh</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q9" id="q9b" value="b" class="mr-2">
+                            <label for="q9b" class="p-2 rounded-md w-full flag-text">Vision 2020</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q9" id="q9c" value="c" class="mr-2">
+                            <label for="q9c" class="p-2 rounded-md w-full flag-text">Smart City Project</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Question 10 -->
+                <div class="quiz-question">
+                    <p class="font-semibold mb-2 flag-text">10. What is a future demand in EdTE?</p>
+                    <div class="space-y-2">
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q10" id="q10a" value="a" class="mr-2">
+                            <label for="q10a" class="p-2 rounded-md w-full flag-text">Personalized Learning with AI</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q10" id="q10b" value="b" class="mr-2">
+                            <label for="q10b" class="p-2 rounded-md w-full flag-text">Manual Typewriting</label>
+                        </div>
+                        <div class="quiz-option flex items-center">
+                            <input type="radio" name="q10" id="q10c" value="c" class="mr-2">
+                            <label for="q10c" class="p-2 rounded-md w-full flag-text">Traditional Blackboards</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="px-8 py-3 bg-violet-600 hover:bg-violet-500 rounded-full text-white font-bold transition-transform duration-300 transform hover:scale-105 flag-text">
+                        Submit Quiz
+                    </button>
+                </div>
+            </form>
+            <!-- Results Display -->
+            <div id="quiz-results" class="hidden mt-8 text-center">
+                <h3 class="text-2xl font-bold text-violet-300 mb-4 result-animation flag-text">Your Score: <span id="score"></span>/10</h3>
+                <p id="motivational-message" class="text-lg result-animation flag-text"></p>
+                <button id="retake-quiz" class="mt-6 px-8 py-3 bg-violet-600 hover:bg-violet-500 rounded-full text-white font-bold transition-transform duration-300 transform hover:scale-105 flag-text">
+                    Retake Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- 10. Q&A Section -->
+        <section id="qa" class="py-20">
+            <div class="relative">
+                <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+                <div class="section-card p-8 rounded-lg relative">
+                    <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Q&A and Discussion</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-bold flag-text">Q: Do I need to be a programmer to study EdTE?</h4>
+                            <p class="pl-4 flag-text">A: While programming skills are highly beneficial, they are not always a strict prerequisite. The field welcomes people from diverse backgrounds, including education, psychology, and design. However, a willingness to learn technical concepts is key.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold flag-text">Have a suggestion?</h4>
+                            <p class="pl-4 flag-text">Feel free to reach out with any ideas or questions!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. Contact Section -->
+      <section id="contact" class="py-20">
+    <div class="relative">
+        <div class="absolute inset-0 header-bg" style="background-image: url('https://images.unsplash.com/photo-1516321310762-479e93c67ae3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+        <div class="section-card p-8 rounded-lg relative">
+            <h2 class="text-3xl font-bold mb-6 text-violet-300 text-center heading-text flag-text">Contact Us</h2>
+            <p class="text-center max-w-md mx-auto flag-text">
+                Have a question or want to collaborate? We'd love to hear from you.
+            </p>
+            <form class="mt-8 max-w-lg mx-auto" action="https://formspree.io/f/movweqby" method="POST">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <input type="text" name="name" placeholder="Your Name" class="w-full p-3 rounded-md bg-purple-800/60 border border-purple-700 focus:ring-2 focus:ring-violet-500 focus:outline-none flag-text" required>
+                    <input type="email" name="email" placeholder="Your Email" class="w-full p-3 rounded-md bg-purple-800/60 border border-purple-700 focus:ring-2 focus:ring-violet-500 focus:outline-none flag-text" required>
+                </div>
+                <textarea name="message" placeholder="Your Message" rows="5" class="w-full p-3 rounded-md bg-purple-800/60 border border-purple-700 focus:ring-2 focus:ring-violet-500 focus:outline-none flag-text" required></textarea>
+                <div class="text-center mt-6">
+                    <button type="submit" class="px-8 py-3 bg-violet-600 hover:bg-violet-500 rounded-full text-white font-bold transition-transform duration-300 transform hover:scale-105 flag-text">
+                        Send Message
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+    </main>
+    
+    <footer class="text-center py-8 border-t border-purple-800/50">
+        <p class="text-sm text-gray-400 flag-text">© 2025 Educational Technology & Engineering . All rights reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript for mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+// Quiz functionality
+const quizForm = document.getElementById('quiz-form');
+const quizResults = document.getElementById('quiz-results');
+const scoreDisplay = document.getElementById('score');
+const motivationalMessage = document.getElementById('motivational-message');
+const retakeButton = document.getElementById('retake-quiz');
+
+// Correct answers
+const correctAnswers = {
+    q1: 'a', // Educational Technology and Engineering
+    q2: 'a', // Virtual Reality (VR)
+    q3: 'a', // Instructional Design
+    q4: 'a', // Moodle
+    q5: 'a', // 1990s
+    q6: 'a', // University of Dhaka
+    q7: 'a', // Instructional Designer
+    q8: 'a', // Khanmigo
+    q9: 'a', // Digital Bangladesh
+    q10: 'a' // Personalized Learning with AI
+};
+
+// Motivational messages based on score
+const messages = {
+    low: "You're just starting your EdTE journey! Keep exploring the field to deepen your knowledge.",
+    medium: "Great effort! You have a solid foundation in EdTE. Dive deeper to master the subject.",
+    high: "Outstanding! Your EdTE knowledge is impressive. Continue innovating in this exciting field!"
+};
+
+quizForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let score = 0;
+    const formData = new FormData(quizForm);
+
+    // Calculate score
+    for (let i = 1; i <= 10; i++) {
+        const answer = formData.get(`q${i}`);
+        if (answer === correctAnswers[`q${i}`]) {
+            score++;
+        }
+    }
+
+    // Display results
+    scoreDisplay.textContent = score;
+    if (score <= 4) {
+        motivationalMessage.textContent = messages.low;
+    } else if (score <= 7) {
+        motivationalMessage.textContent = messages.medium;
+    } else {
+        motivationalMessage.textContent = messages.high;
+    }
+
+    quizResults.classList.remove('hidden');
+    quizForm.classList.add('hidden');
+
+    // Trigger animations
+    const animatedElements = quizResults.querySelectorAll('.result-animation');
+    animatedElements.forEach(el => {
+        el.classList.remove('result-animation');
+        void el.offsetWidth; // Force reflow
+        el.classList.add('result-animation');
+    });
+});
+
+// Retake quiz
+retakeButton.addEventListener('click', () => {
+    quizForm.reset();
+    quizResults.classList.add('hidden');
+    quizForm.classList.remove('hidden');
+});
+
+        // JavaScript for animated background
+        const canvas = document.getElementById('background-animation');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        const particleCount = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.color = `rgba(167, 139, 250, ${Math.random() * 0.5 + 0.2})`;
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+                this.x += this.speedX;
+                this.y += this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            init();
+        });
+
+        // Active nav link indicator on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function updateActiveNavLink() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNavLink);
+
+        // Animation handling with Intersection Observer
+        const animatedElements = document.querySelectorAll('.heading-text, .header-bg, .bubble-image, .event-title, .letter, .flag-text, .slide-in-left, .slide-in-right');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                } else {
+                    entry.target.classList.remove('is-visible');
+                }
+            });
+        }, {
+            threshold: 0.1 // Trigger when 10% of element is visible
+        });
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+
+        // Handle navigation clicks to reset animations
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+
+                if (targetSection) {
+                    // Reset animations for all elements in the target section
+                    const sectionElements = targetSection.querySelectorAll('.heading-text, .header-bg, .bubble-image, .event-title, .letter, .flag-text, .slide-in-left, .slide-in-right');
+                    sectionElements.forEach(el => {
+                        el.classList.remove('is-visible');
+                        // Force reflow to restart animations
+                        void el.offsetWidth;
+                        el.classList.add('is-visible');
+                    });
+
+                    // Smooth scroll to target section
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Success Stories category toggle
+        function showCategory(category) {
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const contentId = category.toLowerCase().replace(' ', '-') + '-content';
+            document.getElementById(contentId).classList.add('active');
+        }
+
+        // Events category toggle
+        function showEventCategory(category) {
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            const contentId = category.toLowerCase() + '-content';
+            document.getElementById(contentId).classList.add('active');
+            // Reset animations for elements in the active category
+            const activeContent = document.getElementById(contentId);
+            const animatedElements = activeContent.querySelectorAll('.bubble-image, .event-title, .flag-text');
+            animatedElements.forEach(el => {
+                el.classList.remove('is-visible');
+                void el.offsetWidth;
+                el.classList.add('is-visible');
+            });
+        }
+
+        // Set default active category to Upcoming Events
+        document.addEventListener('DOMContentLoaded', () => {
+            showEventCategory('upcoming');
+        });
+    </script>
+</body>
+</html>
